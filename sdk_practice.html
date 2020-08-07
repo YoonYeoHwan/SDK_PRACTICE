@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <h1>
+        SDK Practice Page
+    </h1>
+    <body>
+        <form>
+            ID : <input type='text' id='user_id'/>
+            <br/>
+            PW : <input type='text' id='password'/>
+            <br/>
+            <input type='submit' value='로그인'/>
+        </form>
+        <script type='text/javascript' src='./backend.ai-client-js/backend.ai-client-node.js'></script>
+        <script type='text/javascript'>
+            import * as ai from './backend.ai-client-js/backend.ai-client-node.js';
+            console.log('console log test');
+            this.clientConfig = new ai.backend.ClientConfig(
+                this.user_id = document.getElementById('user_id').value,
+                this.password = document.getElementById('password').value,
+                this.api_endpoint,
+                'SESSION'
+            );
+            this.client = new ai.backend.Client(
+                this.clientConfig,
+                `Backend.AI Console.`,
+            );
+            let isLogon = await this.client.check_login();
+            if (isLogon === false) {
+                this.client.login().then(response => {
+                    if (response === false) {
+                        if (this.user_id != '' && this.password != '') {
+                            console.log(`Login information mismatch. Please check your login information.`);
+                        }
+                    } else if (response.fail_reason) {
+                        if (this.user_id != '', this.password != '') {
+                            console.log(`Login failed: ${response.fail_reason}.`);
+                        }
+                    } else {
+                        this.is_connected = true;
+                        console.log(`Login succeeded.`);
+                    }
+                }).catch((err) => {
+                    console.log(`Login failed: ${err.message}.`);
+                });
+            } else {
+                console.log(`Login already succeeded.`)
+            }
+        </script>
+    </body>
+</html>
