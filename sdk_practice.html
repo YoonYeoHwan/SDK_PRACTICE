@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <h1>
-        SDK Practice Page
+        SDK Practice
     </h1>
     <body>
         <form>
@@ -11,9 +11,9 @@
             <br/>
             <input type='submit' value='로그인'/>
         </form>
-        <script type='text/javascript' src='./backend.ai-client-js/backend.ai-client-node.js'></script>
         <script type='text/javascript'>
-            import * as ai from './backend.ai-client-js/backend.ai-client-node.js';
+            const ai = require('../backend.ai-client-js/backend.ai-client-node.js');
+
             console.log('console log test');
             this.clientConfig = new ai.backend.ClientConfig(
                 this.user_id = document.getElementById('user_id').value,
