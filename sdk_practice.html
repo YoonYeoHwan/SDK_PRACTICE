@@ -9,43 +9,54 @@
             <br/>
             PW : <input type='text' id='password'/>
             <br/>
-            <input type='submit' value='로그인'/>
+            <input type='submit' value='Login'/>
         </form>
-        <script type='text/javascript'>
-            const ai = require('../backend.ai-client-js/backend.ai-client-node.js');
+        <script type='module'>
+            import './backend.ai-client-js/backend.ai-client-es6.js';
 
-            console.log('console log test');
-            this.clientConfig = new ai.backend.ClientConfig(
-                this.user_id = document.getElementById('user_id').value,
-                this.password = document.getElementById('password').value,
-                this.api_endpoint,
-                'SESSION'
+            let config = new ai.backend.ClientConfig(
+                'AKIAIOSFODNN7EXAMPLE',
+                'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+                'http://127.0.0.1:8081/',
             );
-            this.client = new ai.backend.Client(
-                this.clientConfig,
-                `Backend.AI Console.`,
+            let client = new ai.backend.Client(
+                config,
+                `Backend.AI ES6 App.`,
             );
-            let isLogon = await this.client.check_login();
-            if (isLogon === false) {
-                this.client.login().then(response => {
-                    if (response === false) {
-                        if (this.user_id != '' && this.password != '') {
-                            console.log(`Login information mismatch. Please check your login information.`);
-                        }
-                    } else if (response.fail_reason) {
-                        if (this.user_id != '', this.password != '') {
-                            console.log(`Login failed: ${response.fail_reason}.`);
-                        }
-                    } else {
-                        this.is_connected = true;
-                        console.log(`Login succeeded.`);
-                    }
-                }).catch((err) => {
-                    console.log(`Login failed: ${err.message}.`);
-                });
-            } else {
-                console.log(`Login already succeeded.`)
-            }
+
+            console.log(config);
+
+            // this.clientConfig = new ai.backend.ClientConfig(
+            //     this.user_id = document.getElementById('user_id').value,
+            //     this.password = document.getElementById('password').value,
+            //     this.api_endpoint,
+            //     'SESSION'
+            // );
+            // this.client = new ai.backend.Client(
+            //     this.clientConfig,
+            //     `Backend.AI Console.`,
+            // );
+            // let isLogon = this.client.check_login();
+            // if (isLogon === false) {
+            //     this.client.login().then(response => {
+            //         if (response === false) {
+            //             if (this.user_id != '' && this.password != '') {
+            //                 console.log(`Login information mismatch. Please check your login information.`);
+            //             }
+            //         } else if (response.fail_reason) {
+            //             if (this.user_id != '', this.password != '') {
+            //                 console.log(`Login failed: ${response.fail_reason}.`);
+            //             }
+            //         } else {
+            //             this.is_connected = true;
+            //             console.log(`Login succeeded.`);
+            //         }
+            //     }).catch((err) => {
+            //         console.log(`Login failed: ${err.message}.`);
+            //     });
+            // } else {
+            //     console.log(`Login already succeeded.`)
+            // }
         </script>
     </body>
 </html>
