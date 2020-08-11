@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <h1>
+    <h3>
         SDK Practice
-    </h1>
+    </h3>
     <body>
         <form>
-            ID : <input type='text' id='user_id'/>
-            <br/>
-            PW : <input type='text' id='password'/>
-            <br/>
-            <input type='submit' value='Login'/>
+            ID: <br/>
+            <input type='text' id='user_id'/><br/>
+            PW: <br/>
+            <input type='password' id='password'/><br/><br/>
+            <input type='button' id='login' value='Login' onclick='_login()'/>
         </form>
         <script type='module'>
-            import './backend.ai-client-js/backend.ai-client-es6.js';
+            import '../backend.ai-client-js/backend.ai-client-es6.js';
 
             let config = new ai.backend.ClientConfig(
                 'AKIAIOSFODNN7EXAMPLE',
@@ -24,39 +24,14 @@
                 `Backend.AI ES6 App.`,
             );
 
-            console.log(config);
+        </script>
+        <script>
 
-            // this.clientConfig = new ai.backend.ClientConfig(
-            //     this.user_id = document.getElementById('user_id').value,
-            //     this.password = document.getElementById('password').value,
-            //     this.api_endpoint,
-            //     'SESSION'
-            // );
-            // this.client = new ai.backend.Client(
-            //     this.clientConfig,
-            //     `Backend.AI Console.`,
-            // );
-            // let isLogon = this.client.check_login();
-            // if (isLogon === false) {
-            //     this.client.login().then(response => {
-            //         if (response === false) {
-            //             if (this.user_id != '' && this.password != '') {
-            //                 console.log(`Login information mismatch. Please check your login information.`);
-            //             }
-            //         } else if (response.fail_reason) {
-            //             if (this.user_id != '', this.password != '') {
-            //                 console.log(`Login failed: ${response.fail_reason}.`);
-            //             }
-            //         } else {
-            //             this.is_connected = true;
-            //             console.log(`Login succeeded.`);
-            //         }
-            //     }).catch((err) => {
-            //         console.log(`Login failed: ${err.message}.`);
-            //     });
-            // } else {
-            //     console.log(`Login already succeeded.`)
-            // }
+            function _login() {
+                console.log('user_id:', document.getElementById('user_id').value);
+                console.log('password:', document.getElementById('password').value);
+            }
+
         </script>
     </body>
 </html>
