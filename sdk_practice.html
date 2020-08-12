@@ -18,21 +18,20 @@
 
             async function loginTest() {
 
-                console.log('loginTest function');
-
                 // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
                 let config = new ai.backend.ClientConfig(
                     'AKIAIOSFODNN7EXAMPLE',
                     'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-                    'http://127.0.0.1:8081/',
+                    'http://127.0.0.1:9003',
+                    'SESSION',
                 );
 
                 // Set user ID and password.
                 // config._userId = document.getElementById('user_id').value;
                 // config._password = document.getElementById('password').value;
-                config._userId = 'input your user id';
-                config._password = 'input your password';
-                
+                config._userId = 'admin@lablup.com';
+                config._password = 'wJalrXUt';
+
                 // Create a client object with configuration object.
                 let client = new ai.backend.Client(
                     config,
