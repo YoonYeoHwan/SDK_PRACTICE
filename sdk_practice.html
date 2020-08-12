@@ -9,28 +9,27 @@
             <input type='text' id='user_id'/><br/>
             PW: <br/>
             <input type='password' id='password'/><br/><br/>
-            <input type='button' id='login' value='Login' onclick='_login()'/>
+            <input type='button' id='login' value='Login'/>
         </form>
         <script type='module'>
             import '../backend.ai-client-js/backend.ai-client-es6.js';
 
-            let config = new ai.backend.ClientConfig(
+            // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
+            let config = new ai.backend.Client(
                 'AKIAIOSFODNN7EXAMPLE',
                 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
                 'http://127.0.0.1:8081/',
-            );
-            let client = new ai.backend.Client(
+            )
+
+            // Set user id and password.
+            config._userId = document.getElementById('user_id').value;
+            config._password = document.getElementById('password').value;
+
+            // Create a client object with configuration object.
+            let client = new ai.backend.ClientConfig(
                 config,
                 `Backend.AI ES6 App.`,
-            );
-
-        </script>
-        <script>
-
-            function _login() {
-                console.log('user_id:', document.getElementById('user_id').value);
-                console.log('password:', document.getElementById('password').value);
-            }
+            )
 
         </script>
     </body>
