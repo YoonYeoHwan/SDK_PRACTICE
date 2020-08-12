@@ -6,30 +6,60 @@
     <body>
         <form>
             ID: <br/>
-            <input type='text' id='user_id'/><br/>
+            <input type='text' id='user_id' autocomplete='username'/><br/>
             PW: <br/>
-            <input type='password' id='password'/><br/><br/>
+            <input type='password' id='password' autocomplete='current-password'/><br/><br/>
+            <!-- TODO: Implement onclick method to pass user ID and password -->
             <input type='button' id='login' value='Login'/>
         </form>
         <script type='module'>
+            // Can be changed according to your directory path.
             import '../backend.ai-client-js/backend.ai-client-es6.js';
 
-            // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
-            let config = new ai.backend.Client(
-                'AKIAIOSFODNN7EXAMPLE',
-                'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-                'http://127.0.0.1:8081/',
-            )
+            async function loginTest() {
 
-            // Set user id and password.
-            config._userId = document.getElementById('user_id').value;
-            config._password = document.getElementById('password').value;
+                console.log('loginTest function');
 
-            // Create a client object with configuration object.
-            let client = new ai.backend.ClientConfig(
-                config,
-                `Backend.AI ES6 App.`,
-            )
+                // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
+                let config = new ai.backend.ClientConfig(
+                    'AKIAIOSFODNN7EXAMPLE',
+                    'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+                    'http://127.0.0.1:8081/',
+                );
+
+                // Set user ID and password.
+                // config._userId = document.getElementById('user_id').value;
+                // config._password = document.getElementById('password').value;
+                config._userId = 'input your user id';
+                config._password = 'input your password';
+                
+                // Create a client object with configuration object.
+                let client = new ai.backend.Client(
+                    config,
+                    `Backend.AI ES6 App.`,
+                );
+
+                let isLogon = await client.check_login();
+                if (isLogon === false) {
+                    client.login().then(response => {
+                        if (response === false) {
+                            if (config._userId != '' && config._password != '') {
+                                console.log(`Login information mistmatch. Please check your login information,`);
+                            } else if (response.fail_reason) {
+                                if (config._userId != '' && config._password != '') {
+                                    console.log(`Login falied: ${response.fail_reason}.`);
+                                }
+                            } else {
+                                console.log(`Login succeeded.`);
+                            }
+                        }
+                    });
+                } else {
+                    console.log(`Login already succeeded.`);
+                }
+            }
+
+            loginTest();
 
         </script>
     </body>
