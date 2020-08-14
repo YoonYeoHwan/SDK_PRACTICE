@@ -20,7 +20,7 @@
             <textarea id='dl_code' style='height: 300px; width: 500px' placeholder='Write your DL code.'></textarea><br/>
             <button id='dl_run'>Run</button>
             <h4>DL Result</h4>
-            <div>DL Runtime Result Contents</div>
+            <div id='dl_result'>DL Runtime Result Contents</div>
         </div>
         <script type='module'>
             // Can be changed according to your directory path.
@@ -73,13 +73,16 @@
 
             let mysessionId = '';
             let code = "print('hello world')";
+            let tmp;
+            let result;
             login().then(async response => {
                 let version = await client.getManagerVersion();
                 return client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04', 'test', {'cpu': 1, 'mem': '1g'});
+            }).then(response => {
                 mysessionId = response.sessionId;
                 console.log(`My session is created: ${response.sessionId}`);
+                return client.execute(mysessionId, 1, 'query', code, {});
             }).then(response => {
-                return client.execute(mysessionId, null, null, code, null);
                 console.log(response);
             }).catch(err => {
                 switch (err.type) {
@@ -91,20 +94,6 @@
                 }
             });
 
-
-            // TODO: Delete or Separate from above code.
-            // let code = "print('hello world')";
-            // client.execute(mysessionId, null, null, code, null).then(async response => {
-            //     console.log(response);
-            // }).catch(err => {
-            //     switch (err.type) {
-            //         case ai.backend.Client.ERR_SERVER:
-            //             console.log(`Session runtime failed: ${err.message}`);
-            //             break;
-            //         default:
-            //             console.log(`request/response failed: ${err.message}`);
-            //     }
-            // });
 
         </script>
     </body>
