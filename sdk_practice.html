@@ -40,7 +40,9 @@
                 `Backend.AI ES6 App.`,
             );
 
-            export async function login() {
+            client.getManagerVersion()
+
+            async function login() {
                 // Set user ID and password.
                 // config._userId = document.getElementById('user_id').value;
                 // config._password = document.getElementById('password').value;
@@ -69,17 +71,16 @@
                 }
             }
 
-            // Doesn't work
-            // client.APIMajorVersion('APIv5');
-
-            login();
-
-            // Both print 'null'
-            // console.log('API VERSION: ', client.apiVersion)
-            // console.log('API MAJOR VERSION: ', client.APIMajorVersion)
-
-            client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04').then(response => {
-                console.log(`My session is created: ${response.kernelId}`);
+            let mysessionId = '';
+            let code = "print('hello world')";
+            login().then(async response => {
+                let version = await client.getManagerVersion();
+                return client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04', 'test', {'cpu': 1, 'mem': '1g'});
+                mysessionId = response.sessionId;
+                console.log(`My session is created: ${response.sessionId}`);
+            }).then(response => {
+                return client.execute(mysessionId, null, null, code, null);
+                console.log(response);
             }).catch(err => {
                 switch (err.type) {
                     case ai.backend.Client.ERR_SERVER:
@@ -91,7 +92,19 @@
             });
 
 
-
+            // TODO: Delete or Separate from above code.
+            // let code = "print('hello world')";
+            // client.execute(mysessionId, null, null, code, null).then(async response => {
+            //     console.log(response);
+            // }).catch(err => {
+            //     switch (err.type) {
+            //         case ai.backend.Client.ERR_SERVER:
+            //             console.log(`Session runtime failed: ${err.message}`);
+            //             break;
+            //         default:
+            //             console.log(`request/response failed: ${err.message}`);
+            //     }
+            // });
 
         </script>
     </body>
