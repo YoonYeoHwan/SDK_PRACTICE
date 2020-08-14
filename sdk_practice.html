@@ -12,7 +12,7 @@
                 PW: <br/>
                 <input type='password' id='password' autocomplete='current-password' placeholder='Password'/><br/><br/>
                 <!-- TODO: Implement onclick method to pass user ID and password -->
-                <input type='button' id='login' value='Login'/>
+                <input type='button' id='login' value='Login' onclick='login()'/>
             </form>
         </div>
         <div>
@@ -40,7 +40,7 @@
                 `Backend.AI ES6 App.`,
             );
 
-            async function login() {
+            export async function login() {
                 // Set user ID and password.
                 // config._userId = document.getElementById('user_id').value;
                 // config._password = document.getElementById('password').value;
@@ -69,9 +69,16 @@
                 }
             }
 
+            // Doesn't work
+            // client.APIMajorVersion('APIv5');
+
             login();
 
-            client.createIfNotExists('python:latest').then(response => {
+            // Both print 'null'
+            // console.log('API VERSION: ', client.apiVersion)
+            // console.log('API MAJOR VERSION: ', client.APIMajorVersion)
+
+            client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04').then(response => {
                 console.log(`My session is created: ${response.kernelId}`);
             }).catch(err => {
                 switch (err.type) {
