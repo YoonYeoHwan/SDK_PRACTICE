@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html>
     <h3>
-        SDK Practice
+        Backend.AI SDK Practice
     </h3>
     <body>
-        <form>
-            ID: <br/>
-            <input type='text' id='user_id' autocomplete='username'/><br/>
-            PW: <br/>
-            <input type='password' id='password' autocomplete='current-password'/><br/><br/>
-            <!-- TODO: Implement onclick method to pass user ID and password -->
-            <input type='button' id='login' value='Login'/>
-        </form>
+        <div>
+            <h4>Login</h4>
+            <form>
+                ID: <br/>
+                <input type='text' id='user_id' autocomplete='username' placeholder='Username'/><br/>
+                PW: <br/>
+                <input type='password' id='password' autocomplete='current-password' placeholder='Password'/><br/><br/>
+                <!-- TODO: Implement onclick method to pass user ID and password -->
+                <input type='button' id='login' value='Login'/>
+            </form>
+        </div>
+        <div>
+            <h4>DL Code</h4>
+            <textarea id='dl_code' style='height: 300px; width: 500px' placeholder='Write your DL code.'></textarea><br/>
+            <button id='dl_run'>Run</button>
+            <h4>DL Result</h4>
+            <div>DL Runtime Result Contents</div>
+        </div>
         <script type='module'>
             // Can be changed according to your directory path.
-            import '../backend.ai-client-js/backend.ai-client-es6.js';
+            import './backend.ai-client-js/backend.ai-client-es6.js';
 
-            async function loginTest() {
+            // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
+            let config = new ai.backend.ClientConfig(
+                'AKIAIOSFODNN7EXAMPLE',
+                'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+                'http://127.0.0.1:9003',
+                'SESSION',
+            );
 
-                // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
-                let config = new ai.backend.ClientConfig(
-                    'AKIAIOSFODNN7EXAMPLE',
-                    'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-                    'http://127.0.0.1:9003',
-                    'SESSION',
-                );
+            // Create a client object with configuration object.
+            let client = new ai.backend.Client(
+                config,
+                `Backend.AI ES6 App.`,
+            );
 
+            async function login() {
                 // Set user ID and password.
                 // config._userId = document.getElementById('user_id').value;
                 // config._password = document.getElementById('password').value;
                 config._userId = 'admin@lablup.com';
                 config._password = 'wJalrXUt';
-
-                // Create a client object with configuration object.
-                let client = new ai.backend.Client(
-                    config,
-                    `Backend.AI ES6 App.`,
-                );
 
                 let isLogon = await client.check_login();
                 if (isLogon === false) {
@@ -52,13 +61,30 @@
                                 console.log(`Login succeeded.`);
                             }
                         }
+                    }).catch(err => {
+                        console.log(`Login failed: ${err.message}`);
                     });
                 } else {
                     console.log(`Login already succeeded.`);
                 }
             }
 
-            loginTest();
+            login();
+
+            client.createIfNotExists('python:latest', client.generateSessionId()).then(response => {
+                console.log(`My session is created: ${response.kernelId}`);
+            }).catch(err => {
+                switch (err.type) {
+                    case ai.backend.Client.ERR_SERVER:
+                        console.log(`Session creation failed: ${err.message}`);
+                        break;
+                    default:
+                        console.log(`request/response failed: ${err.message}`);
+                }
+            });
+
+
+
 
         </script>
     </body>
