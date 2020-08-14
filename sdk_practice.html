@@ -71,7 +71,7 @@
 
             login();
 
-            client.createIfNotExists('python:latest', client.generateSessionId()).then(response => {
+            client.createIfNotExists('python:latest').then(response => {
                 console.log(`My session is created: ${response.kernelId}`);
             }).catch(err => {
                 switch (err.type) {
