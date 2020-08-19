@@ -20,7 +20,10 @@
             <textarea id='dl_code' style='height: 300px; width: 500px' placeholder='Write your DL code.'></textarea><br/>
             <button id='dl_run'>Run</button>
             <h4>DL Result</h4>
-            <div id='dl_result'>DL Runtime Result Contents</div>
+            // Connect to DL runtime result
+            <div id='dl_result'>
+                DL Runtime Result Contents
+            </div>
         </div>
         <script type='module'>
             // Can be changed according to your directory path.
@@ -39,8 +42,6 @@
                 config,
                 `Backend.AI ES6 App.`,
             );
-
-            client.getManagerVersion()
 
             async function login() {
                 // Set user ID and password.
@@ -71,17 +72,13 @@
                 }
             }
 
-            let mysessionId = '';
             let code = "print('hello world')";
-            let tmp;
-            let result;
             login().then(async response => {
                 let version = await client.getManagerVersion();
                 return client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04', 'test', {'cpu': 1, 'mem': '1g'});
             }).then(response => {
-                mysessionId = response.sessionId;
                 console.log(`My session is created: ${response.sessionId}`);
-                return client.execute(mysessionId, 1, 'query', code, {});
+                return client.execute(response.sessionId, 1, 'query', code, {});
             }).then(response => {
                 console.log(response);
             }).catch(err => {
@@ -93,7 +90,6 @@
                         console.log(`request/response failed: ${err.message}`);
                 }
             });
-
 
         </script>
     </body>
