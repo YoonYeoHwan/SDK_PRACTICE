@@ -7,12 +7,14 @@
         <div>
             <h4>Login</h4>
             <form>
+                API Endpoint: <br/>
+                <input type='text' id='api_endpoint' placeholder='https://cloud.backend.ai' value="https://cloud.backend.ai" /><br/>
                 ID: <br/>
                 <input type='text' id='user_id' autocomplete='username' placeholder='Username'/><br/>
                 PW: <br/>
                 <input type='password' id='password' autocomplete='current-password' placeholder='Password'/><br/><br/>
                 <!-- TODO: Implement onclick method to pass user ID and password -->
-                <input type='button' id='login' value='Login' onclick='login()'/>
+                <input type='button' id='login_button' value='Login' />
             </form>
         </div>
         <div>
@@ -28,27 +30,25 @@
         <script type='module'>
             // Can be changed according to your directory path.
             import './backend.ai-client-js/backend.ai-client-es6.js';
-
-            // Create a client configuration object with ACCESS_KEY, SECRET_KEY and api_endpoint .
-            let config = new ai.backend.ClientConfig(
-                'AKIAIOSFODNN7EXAMPLE',
-                'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-                'http://127.0.0.1:9003',
-                'SESSION',
-            );
-
-            // Create a client object with configuration object.
-            let client = new ai.backend.Client(
-                config,
-                `Backend.AI ES6 App.`,
-            );
-
-            async function login() {
+            document.querySelector('#login_button').addEventListener('click', login.bind(this));
+            document.querySelector('#dl_run').addEventListener('click', execute.bind(this));
+            let client;
+            export async function login() {
+                // Create a client configuration object.
                 // Set user ID and password.
-                // config._userId = document.getElementById('user_id').value;
-                // config._password = document.getElementById('password').value;
-                config._userId = 'admin@lablup.com';
-                config._password = 'wJalrXUt';
+                let config = new ai.backend.ClientConfig(
+                    document.querySelector('#user_id').value,
+                    document.querySelector('#password').value,
+                    document.querySelector('#api_endpoint').value,
+                    'SESSION',
+                );
+
+                // Create a client object with configuration object.
+                client = new ai.backend.Client(
+                    config,
+                    `Backend.AI ES6 App.`,
+                );
+
 
                 let isLogon = await client.check_login();
                 if (isLogon === false) {
@@ -72,24 +72,30 @@
                 }
             }
 
-            let code = "print('hello world')";
-            login().then(async response => {
-                let version = await client.getManagerVersion();
-                return client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04', 'test', {'cpu': 1, 'mem': '1g'});
-            }).then(response => {
-                console.log(`My session is created: ${response.sessionId}`);
-                return client.execute(response.sessionId, 1, 'query', code, {});
-            }).then(response => {
-                console.log(response);
-            }).catch(err => {
-                switch (err.type) {
-                    case ai.backend.Client.ERR_SERVER:
-                        console.log(`Session creation failed: ${err.message}`);
-                        break;
-                    default:
-                        console.log(`request/response failed: ${err.message}`);
+            export async function execute() {
+                if (typeof client === 'undefined') {
+                    await login();
                 }
-            });
+                let version = await client.getManagerVersion();
+                let code = document.querySelector('#dl_code').value;
+                client.createIfNotExists('index.docker.io/lablup/python:3.8-ubuntu18.04', 'test', {'cpu': 1, 'mem': '1g'}).then(response => {
+                    console.log(`My session is created: ${response.sessionId}`);
+                    return client.execute(response.sessionId, 1, 'query', code, {});
+                }).then(response => {
+                    if (response.result.exitCode === 0) {
+                        console.log( response.result.console);
+                        document.querySelector('#dl_result').innerHTML = response.result.console[0][1];
+                    }
+                }).catch(err => {
+                    switch (err.type) {
+                        case ai.backend.Client.ERR_SERVER:
+                            console.log(`Session creation failed: ${err.message}`);
+                            break;
+                        default:
+                            console.log(`request/response failed: ${err.message}`);
+                    }
+                });
+            }
 
         </script>
     </body>
